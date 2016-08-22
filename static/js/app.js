@@ -14,18 +14,38 @@ app.config(function ($httpProvider) {
 
 app.controller('DummyController', ['$scope', '$http', function ($scope, $http) {
 }]);
-app.controller('TweetController', ['$scope', '$http', function ($scope, $http) {
+app.controller('TweetController', ["$scope", "$http", "$q", function ($scope, $http, $q) {
+
+  $scope.$watch("share_url", function () {
+    console.log($scope.share_url);
+  });
+
+  $scope._download = function(share){
+    var deferred = $q.defer();
+    if (share){
+      html2canvas($("#tweet"), {
+        onrendered: function (canvas) {
+          return deferred.resolve({"image_data": canvas.toDataURL()});
+        }
+      });
+      return deferred.promise;
+    }
+    else{
+      html2canvas($("#tweet"), {
+        onrendered: function (canvas) {
+          canvas.toBlob(function(blob) {
+            saveAs(blob, "tweet.png");
+          });
+          // Canvas2Image.saveAsPNG(canvas);
+        }
+      });
+    }
+  };
 
   $scope.download = function () {
-    html2canvas($("#tweet"), {
-      onrendered: function (canvas) {
-        canvas.toBlob(function(blob) {
-          saveAs(blob, "tweet.png");
-        });
-        // Canvas2Image.saveAsPNG(canvas);
-      }
-    });
-  }
+    console.log("download")
+    $scope._download(false);
+  };
 
   $scope.clear = function(){
     $scope.title = "";
@@ -34,6 +54,30 @@ app.controller('TweetController', ['$scope', '$http', function ($scope, $http) {
   };
 
   $scope.share = function(){
+    console.log("share");
+    console.log($scope.share_url);
+    var result = $scope._download(true);
+    result.then(function(data){
+      var csrf = $("input[name=csrfmiddlewaretoken]").val();
+      var data = {
+        csrfmiddlewaretoken: csrf,
+        image: data.image_data,
+      };
 
+      $http.post($scope.share_url, $.param(data))
+      .success(function (data) {
+        console.log("success");
+        console.log(data);
+        if (data.status) {
+          window.location = data.success_url;
+        }
+        else {
+          window.location = data.error_url;
+        }
+      })
+      .error(function (data) {
+        console.log("error");
+      });
+    })
   };
 }]);

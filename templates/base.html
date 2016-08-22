@@ -31,6 +31,24 @@
     </div>
     <div id="navbar" class="collapse navbar-collapse navbar-right">
       <ul class="nav navbar-nav">
+        <li>
+          {% if user and not user.is_anonymous %}
+            <li>
+              <a href="#">
+                {{ user.get_full_name|default:user.username }}
+              </a>
+            </li>
+            <li>
+              <a href="{% url 'auth:logout' %}?next={{ request.path }}">
+                {% trans 'Logout' %}
+              </a>
+            </li>
+          {% else %}
+            <a href="{% url 'social:begin' 'twitter' %}?next={{ request.path }}">
+              {% trans 'Sign in with Twitter' %}
+            </a>
+          {% endif %}
+        </li>
         <li><a href="#">{% trans 'Contact' %}</a></li>
       </ul>
     </div>
