@@ -14,7 +14,13 @@ app.config(function ($httpProvider) {
 
 app.controller('DummyController', ['$scope', '$http', function ($scope, $http) {
 }]);
-app.controller('TweetController', ["$scope", "$http", "$q", function ($scope, $http, $q) {
+app.controller("TweetController", ["$scope", "$http", "$q", function ($scope, $http, $q) {
+
+  console.log("TweetController");
+  $scope.title = "";
+  $scope.body = "";
+  $scope.signature = "";
+  $scope.loading = false;
 
   $scope.$watch("share_url", function () {
     console.log($scope.share_url);
@@ -55,7 +61,9 @@ app.controller('TweetController', ["$scope", "$http", "$q", function ($scope, $h
 
   $scope.share = function(){
     console.log("share");
-    console.log($scope.share_url);
+    $scope.loading = true;
+    console.log($scope);
+    console.log($scope.loading);
     var result = $scope._download(true);
     result.then(function(data){
       var csrf = $("input[name=csrfmiddlewaretoken]").val();
@@ -63,7 +71,6 @@ app.controller('TweetController', ["$scope", "$http", "$q", function ($scope, $h
         csrfmiddlewaretoken: csrf,
         image: data.image_data,
       };
-
       $http.post($scope.share_url, $.param(data))
       .success(function (data) {
         console.log("success");
@@ -74,8 +81,10 @@ app.controller('TweetController', ["$scope", "$http", "$q", function ($scope, $h
         else {
           window.location = data.error_url;
         }
+        $scope.loading = false;
       })
       .error(function (data) {
+        $scope.loading = false;
         console.log("error");
       });
     })
