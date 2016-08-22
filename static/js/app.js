@@ -15,4 +15,25 @@ app.config(function ($httpProvider) {
 app.controller('DummyController', ['$scope', '$http', function ($scope, $http) {
 }]);
 app.controller('TweetController', ['$scope', '$http', function ($scope, $http) {
+
+  $scope.download = function () {
+    html2canvas($("#tweet"), {
+      onrendered: function (canvas) {
+        canvas.toBlob(function(blob) {
+          saveAs(blob, "tweet.png");
+        });
+        // Canvas2Image.saveAsPNG(canvas);
+      }
+    });
+  }
+
+  $scope.clear = function(){
+    $scope.title = "";
+    $scope.body = "";
+    $scope.signature = "";
+  };
+
+  $scope.share = function(){
+
+  };
 }]);

@@ -22,7 +22,7 @@ body {
 
 #tweet {
   max-width: 595px;
-  /*padding: 15px;*/
+  padding: 15px;
   word-break: break-word;
   background-color: #fff;
 }
@@ -40,4 +40,12 @@ body {
 
 #tweet .credits {
   color: #aaa;
+  font-size: 11px;
+  margin-bottom: -5px;
+  border-top: 1px solid;
+  padding-top: 5px;
+}
+
+.panel-body {
+  padding: 0px;
 }
