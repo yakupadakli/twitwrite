@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block content %}
+  <h1>
+    {% trans "Write More!" %}
+  </h1>
+  <h2>
+    {% trans "With no text limit on Twitter." %}
+  </h2>
+  <br /><br />
+  <div class="text-left" ng-controller="TweetController">
+    <div class="col-md-6">
+      <h4>
+        {% trans "Start writing." %}
+      </h4>
+      {% include "form.html" with form=form %}
+    </div>
+    <div class="col-md-6">
+      <h4>
+        {% trans "Preview" %}
+      </h4>
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <div id="tweet">
+            <p class="title" ng-bind="title">
+
+            </p>
+            <p class="body" ng-bind="body">
+
+            </p>
+            <p class="signature" ng-bind="signature">
+
+            </p>
+            <p class="credits">via - Tweet Write App (twitter.yakupadakli.com)</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

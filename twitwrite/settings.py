@@ -37,6 +37,8 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_extensions',
+    'tweet.apps.TweetConfig',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -48,8 +50,6 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'django_extensions',
-    'tweet.apps.TweetConfig',
 )
 
 ROOT_URLCONF = 'twitwrite.urls'

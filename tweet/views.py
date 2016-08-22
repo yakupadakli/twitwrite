@@ -1,3 +1,9 @@
-from django.shortcuts import render
+from django.views.generic.base import TemplateView
+from django.views.generic.edit import FormMixin
 
-# Create your views here.
+from tweet.forms import TweetForm
+
+
+class IndexView(FormMixin, TemplateView):
+    template_name = "tweet/index.html"
+    form_class = TweetForm
