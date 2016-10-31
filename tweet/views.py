@@ -1,3 +1,4 @@
+import logging
 import twitter
 
 from django.conf import settings
@@ -7,6 +8,9 @@ from django.views.generic.base import TemplateView, View
 from django.views.generic.edit import FormMixin
 
 from tweet.forms import TweetForm
+
+
+logger = logging.getLogger(__name__)
 
 
 class IndexView(FormMixin, TemplateView):
@@ -36,14 +40,15 @@ class PostTweetView(View):
 
             image_data = request.POST.get("image")
             image_data = image_data.replace("data:image/png;base64,", "")
-            image = open("image.png", "wb")
+            image = open("tmp/image.png", "wb")
             image.write(image_data.decode('base64'))
             image.close()
-            with open("image.png", "rb") as imagefile:
+            with open("tmp/image.png", "rb") as imagefile:
                 imagedata = imagefile.read()
                 image_id = t_up.media.upload(media=imagedata)["media_id_string"]
             t.statuses.update(status="", media_ids=",".join([image_id]))
-        except:
+        except Exception, e:
+	    logger.error("Error: %s" % e)
             context["status"] = False
         return JsonResponse(context)
 
